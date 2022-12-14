@@ -1,0 +1,5 @@
+[default]
+aws_access_key_id = ocid1.credential.oc1..aaaaaaaagkf7v4swnmxjt3fkuoefkjyl5xobj3rejrkqrbqkjjuliurjhbva
+aws_secret_access_key = IzvuEwdLzEcCwkPi7BYnIwewqVkPzfh0rqx5wgmP3DE=
+region = uk-london-1
+
