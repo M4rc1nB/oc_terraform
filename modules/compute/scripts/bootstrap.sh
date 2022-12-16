@@ -2,7 +2,7 @@
 
 set -e
 
-while [[ -n $(pidof yum) ]]
+while [[ -n $(pidof apt) ]]
 do
 	sleep 3;
 done
@@ -26,18 +26,30 @@ sudo cp ddclient.conf /etc/ddclient.conf
 sudo apt install ddclient -y
 sudo service ddclient restart
 
-#Mount persistant volume(formatif required)
-
+# format and mount volume
 sudo mkdir -p /mnt/data
-
-part=$(sudo partprobe -d -s "/dev/sdb")
-
+part=$(sudo partprobe -d -s /dev/oracleoci/oraclevdag)
 if [ -z "$part" ]; then
-sudo mkfs.ext4 /dev/sdb
+  sudo mkfs.ext4 /dev/oracleoci/oraclevdag
+  while [ ! -L /dev/oracleoci/oraclevdag ]; do sleep 10; done
 fi
 
-sudo mount /dev/sdb /mnt/data
-
+n=0
+ok=false
+until [ "$n" -ge 5 ]
+do
+  if mountpoint -q /mnt/data ; then    
+      echo "/mnt/data mounted";
+      ok=true
+      break 
+  else    
+      echo "/mnt/data not mounted";
+      sudo mount /dev/oracleoci/oraclevdag /mnt/data/; 
+  fi
+  n=$((n+1))
+  sleep 10
+done
+if ! $ok ; then exit 1; fi
 
 # install and enable Docker
 sudo apt install -y jq
@@ -96,6 +108,7 @@ services:
         - /mnt/data/code-server/config:/config # Volume mount for the container config files (Replace the path with the path on your host)
       ports:
         - 8443:8443 # Port mapping for the container in the format <host-port>:<container-port>. You can choose the <host-port> as per your convenience
+        - 22:22 #SSH
       restart: unless-stopped # Keep the container running unless manually stopped
 
   zookeeper:
@@ -142,7 +155,7 @@ services:
           max-size: 10m
           max-file: "3"
      ports:
-       - '5438:5432'
+       - '5432:5432'
      volumes:
        - /mnt/data/postgres/data:/var/lib/postgresql/data
      restart: unless-stopped

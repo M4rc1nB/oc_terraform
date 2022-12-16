@@ -1,5 +1,5 @@
 variable "tenancy_ocid" {
-    default = "ocid1.tenancy.oc1..aaaaaaaa4jxpivou2v7qawgmduzj2w6c3ama6g7z46hx44jfjyhh5hpfgeda"
+  default = "ocid1.tenancy.oc1..aaaaaaaa4jxpivou2v7qawgmduzj2w6c3ama6g7z46hx44jfjyhh5hpfgeda"
 }
 
 variable "user_ocid" {
@@ -7,7 +7,7 @@ variable "user_ocid" {
 }
 
 variable "fingerprint" {
-    default = "22:23:1e:d6:b8:2d:24:ad:27:58:07:93:1e:1f:44:d6"
+  default = "22:23:1e:d6:b8:2d:24:ad:27:58:07:93:1e:1f:44:d6"
 }
 
 variable "private_key_path" {
@@ -19,17 +19,36 @@ variable "ssh_public_key" {
 }
 
 variable "compartment_ocid" {
-    default = "ocid1.tenancy.oc1..aaaaaaaa4jxpivou2v7qawgmduzj2w6c3ama6g7z46hx44jfjyhh5hpfgeda"
+  default = "ocid1.tenancy.oc1..aaaaaaaa4jxpivou2v7qawgmduzj2w6c3ama6g7z46hx44jfjyhh5hpfgeda"
 }
 
 variable "region" {
-    default = "uk-london-1"
-}
-
-variable "instance_shape" {
-  default = "VM.Standard.A1.Flex" # Or VM.Standard.E2.1.Micro
+  default = "uk-london-1"
 }
 
 variable "instance_ocpus" { default = 1 }
 
 variable "instance_shape_config_memory_in_gbs" { default = 6 }
+
+variable "generate_ssh_key_pair" {
+  description = "Auto-generate SSH key pair"
+  type        = string
+  default     = false
+}
+
+
+variable "instance_shape" {
+  description = "Shape of the instance"
+  type        = string
+  default     = "VM.Standard.A1.Flex"
+}
+
+
+variable "use_tenancy_level_policy" {
+  description = "Compute instance to access all resources at tenancy level"
+  type        = bool
+  default     = true
+}
+
+
+
